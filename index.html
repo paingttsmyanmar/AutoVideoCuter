@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
 
-<title>AI Video Splitter</title>
+<meta charset="UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Video Splitter</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -17,103 +20,150 @@
 <div class="container">
 
 
-<div class="banner">
+    <div class="banner">
 
-🎬 AI VIDEO SPLITTER
+        🎬 AI VIDEO SPLITTER
 
-<span>
-Auto Video Cutting Tool
-</span>
+        <span>
+            Auto Video Cutting Tool
+        </span>
 
-<p>
-Upload Video & Split Automatically
-</p>
+
+        <p>
+            Upload Video & Split Automatically
+        </p>
+
+    </div>
+
+
+
+
+    <div class="card">
+
+
+        <h2>
+            📁 Upload Video
+        </h2>
+
+
+        <input 
+        type="file"
+        id="video"
+        accept="video/*">
+
+
+    </div>
+
+
+
+
+
+    <div class="card">
+
+
+        <h2>
+            ⏱️ Choose Split Time
+        </h2>
+
+
+        <select id="time">
+
+
+            <option value="300">
+                5 Minutes
+            </option>
+
+
+            <option value="600" selected>
+                10 Minutes
+            </option>
+
+
+            <option value="1200">
+                20 Minutes
+            </option>
+
+
+            <option value="1800">
+                30 Minutes
+            </option>
+
+
+        </select>
+
+
+    </div>
+
+
+
+
+
+
+    <button id="start">
+
+        🚀 Generate Video
+
+    </button>
+
+
+
+
+
+
+
+    <div class="card">
+
+
+        <h2>
+            📥 Download Result
+        </h2>
+
+
+        <div id="result">
+
+            Waiting...
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+    <div class="card">
+
+
+        <h2>
+            🛠️ Debug Log
+        </h2>
+
+
+        <pre id="log">
+
+System Ready...
+
+        </pre>
+
+
+    </div>
+
+
+
+
 
 </div>
 
 
 
-<div class="card">
-
-<h2>📁 Upload Video</h2>
-
-<input 
-type="file"
-id="video"
-accept="video/*">
-
-</div>
 
 
-
-
-<div class="card">
-
-
-<h2>⏱️ Choose Split Time</h2>
-
-
-<select id="time">
-
-
-<option value="300">
-5 Minutes
-</option>
-
-
-<option value="600" selected>
-10 Minutes
-</option>
-
-
-<option value="1200">
-20 Minutes
-</option>
-
-
-<option value="1800">
-30 Minutes
-</option>
-
-
-</select>
-
-
-</div>
-
-
-
-
-<button id="start">
-
-🚀 Generate Video
-
-</button>
-
-
-
-<div class="card">
-
-
-<h2>📥 Download Result</h2>
-
-
-<div id="result">
-
-Waiting...
-
-</div>
-
-
-</div>
-
-
-
-</div>
-
-
-<script src="script.js"></script>
+<script type="module" src="script.js"></script>
 
 
 </body>
+
 </html>
