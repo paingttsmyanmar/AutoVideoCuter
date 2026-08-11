@@ -1,15 +1,81 @@
-const fileInput = document.getElementById("file");
-const splitTime = document.getElementById("splitTime");
-const startBtn = document.getElementById("startBtn");
-const result = document.getElementById("result");
+import { FFmpeg } from 
+"https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/+esm";
+
+import { fetchFile } from 
+"https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/+esm";
 
 
-startBtn.addEventListener("click", async ()=>{
+
+const ffmpeg = new FFmpeg();
 
 
-    if(!fileInput.files[0]){
 
-        alert("Please select a video file!");
+const videoInput =
+document.getElementById("video");
+
+
+const startBtn =
+document.getElementById("start");
+
+
+const timeSelect =
+document.getElementById("time");
+
+
+const result =
+document.getElementById("result");
+
+
+
+let loaded = false;
+
+
+
+async function loadFFmpeg(){
+
+
+    if(!loaded){
+
+
+        result.innerHTML =
+        "⏳ Loading FFmpeg...";
+
+
+        await ffmpeg.load({
+
+
+            coreURL:
+            "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm/ffmpeg-core.js"
+
+
+        });
+
+
+        loaded = true;
+
+
+    }
+
+}
+
+
+
+
+startBtn.addEventListener(
+"click",
+async ()=>{
+
+
+    const file =
+    videoInput.files[0];
+
+
+
+    if(!file){
+
+        alert(
+        "Please select video"
+        );
 
         return;
 
@@ -17,137 +83,128 @@ startBtn.addEventListener("click", async ()=>{
 
 
 
-    const formData = new FormData();
-
-
-
-    formData.append(
-        "video",
-        fileInput.files[0]
-    );
-
-
-
-    formData.append(
-        "splitTime",
-        splitTime.value
-    );
+    await loadFFmpeg();
 
 
 
     result.innerHTML =
-    "⏳ Processing Video... Please wait";
+    "⏳ Processing Video...";
 
 
 
-    startBtn.disabled = true;
+    const inputName =
+    "input.mp4";
 
 
 
-    try{
-
-
-        const response = await fetch(
-            "/upload",
-            {
-
-                method:"POST",
-
-                body:formData
-
-            }
-        );
+    await ffmpeg.writeFile(
+        inputName,
+        await fetchFile(file)
+    );
 
 
 
-        const data = await response.json();
-
-
-
-        if(data.error){
-
-
-            result.innerHTML =
-            "❌ "+data.error;
-
-
-            startBtn.disabled = false;
-
-            return;
-
-        }
+    const seconds =
+    Number(timeSelect.value);
 
 
 
 
-
-        let html = "";
-
+    await ffmpeg.exec([
 
 
-        html += "✅ Complete!<br><br>";
+        "-i",
+        inputName,
+
+
+        "-c",
+        "copy",
+
+
+        "-map",
+        "0",
+
+
+        "-segment_time",
+        seconds.toString(),
+
+
+        "-f",
+        "segment",
+
+
+        "part_%03d.mp4"
+
+
+    ]);
 
 
 
-        html += "🎬 Download Parts<br>";
+
+    result.innerHTML =
+    "✅ Complete<br><br>";
 
 
 
-        data.files.forEach((file)=>{
+    let html = "";
+
+
+
+    for(let i=0;i<50;i++){
+
+
+        let name =
+        `part_${String(i).padStart(3,"0")}.mp4`;
+
+
+
+        try{
+
+
+            const data =
+            await ffmpeg.readFile(name);
+
+
+
+            const blob =
+            new Blob(
+                [data.buffer],
+                {
+                    type:"video/mp4"
+                }
+            );
+
+
+
+            const url =
+            URL.createObjectURL(blob);
+
 
 
             html += `
 
-            <a href="/downloads/${data.zip.replace(".zip","")}/${file}" download>
-
-            ⬇ ${file}
-
+            <a href="${url}" download="${name}">
+            ⬇ Download ${name}
             </a>
 
             `;
 
 
-        });
 
+        }
 
+        catch(e){
 
+            break;
 
-        html += `
-
-        <br>
-
-        <a href="${data.zip}" download>
-
-        📦 Download All ZIP
-
-        </a>
-
-        `;
-
-
-
-        result.innerHTML = html;
-
-
-
-    }
-
-
-    catch(error){
-
-
-        console.log(error);
-
-
-        result.innerHTML =
-        "❌ Server Error";
+        }
 
 
     }
 
 
 
-    startBtn.disabled = false;
+    result.innerHTML += html;
 
 
 
