@@ -1,211 +1,130 @@
-import { FFmpeg } from 
-"https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/+esm";
-
-import { fetchFile } from 
-"https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/+esm";
+const logBox = document.getElementById("log");
 
 
+function log(message){
 
-const ffmpeg = new FFmpeg();
+    logBox.innerHTML +=
+    "\n" + message;
 
-
-
-const videoInput =
-document.getElementById("video");
-
-
-const startBtn =
-document.getElementById("start");
-
-
-const timeSelect =
-document.getElementById("time");
-
-
-const result =
-document.getElementById("result");
-
-
-
-let loaded = false;
-
-
-
-async function loadFFmpeg(){
-
-
-    if(!loaded){
-
-
-        result.innerHTML =
-        "⏳ Loading FFmpeg...";
-
-
-        await ffmpeg.load({
-
-
-            coreURL:
-            "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm/ffmpeg-core.js"
-
-
-        });
-
-
-        loaded = true;
-
-
-    }
+    console.log(message);
 
 }
 
 
 
+try{
 
-startBtn.addEventListener(
-"click",
-async ()=>{
 
+log("✅ Button Clicked");
 
-    const file =
-    videoInput.files[0];
 
 
+const file = videoInput.files[0];
 
-    if(!file){
 
-        alert(
-        "Please select video"
-        );
+if(!file){
 
-        return;
+    log("❌ No Video Selected");
 
-    }
+    alert("Select Video First");
 
+    return;
 
+}
 
-    await loadFFmpeg();
 
 
+log("📁 File : " + file.name);
 
-    result.innerHTML =
-    "⏳ Processing Video...";
 
 
+log("⏳ Loading FFmpeg...");
 
-    const inputName =
-    "input.mp4";
+await loadFFmpeg();
 
 
 
-    await ffmpeg.writeFile(
-        inputName,
-        await fetchFile(file)
-    );
+log("✅ FFmpeg Loaded");
 
 
 
-    const seconds =
-    Number(timeSelect.value);
+log("📥 Reading Video...");
 
 
 
+await ffmpeg.writeFile(
 
-    await ffmpeg.exec([
+"input.mp4",
 
+await fetchFile(file)
 
-        "-i",
-        inputName,
+);
 
 
-        "-c",
-        "copy",
 
+log("✅ Video Loaded");
 
-        "-map",
-        "0",
 
 
-        "-segment_time",
-        seconds.toString(),
+let split =
+Number(timeSelect.value);
 
 
-        "-f",
-        "segment",
 
+log(
+"✂️ Split Time : "
++ split
++ " seconds"
+);
 
-        "part_%03d.mp4"
 
 
-    ]);
+log("⚙️ FFmpeg Processing...");
 
 
 
+await ffmpeg.exec([
 
-    result.innerHTML =
-    "✅ Complete<br><br>";
+"-i",
+"input.mp4",
 
+"-c",
+"copy",
 
+"-map",
+"0",
 
-    let html = "";
+"-segment_time",
+split.toString(),
 
+"-f",
+"segment",
 
+"part_%03d.mp4"
 
-    for(let i=0;i<50;i++){
+]);
 
 
-        let name =
-        `part_${String(i).padStart(3,"0")}.mp4`;
 
+log("🎉 Split Complete");
 
 
-        try{
 
+}
 
-            const data =
-            await ffmpeg.readFile(name);
+catch(error){
 
 
+log("❌ ERROR FOUND:");
 
-            const blob =
-            new Blob(
-                [data.buffer],
-                {
-                    type:"video/mp4"
-                }
-            );
+log(error.message);
 
 
+console.error(error);
 
-            const url =
-            URL.createObjectURL(blob);
 
+result.innerHTML =
+"❌ Error : "+error.message;
 
 
-            html += `
-
-            <a href="${url}" download="${name}">
-            ⬇ Download ${name}
-            </a>
-
-            `;
-
-
-
-        }
-
-        catch(e){
-
-            break;
-
-        }
-
-
-    }
-
-
-
-    result.innerHTML += html;
-
-
-
-});
+}
