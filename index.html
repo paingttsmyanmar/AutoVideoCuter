@@ -1,13 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
 
-<meta charset="UTF-8">
+<title>AI Video Splitter</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>AI Video Splitter</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -20,122 +17,103 @@
 <div class="container">
 
 
-    <div class="banner">
+<div class="banner">
 
-        🎬 AI VIDEO SPLITTER
+🎬 AI VIDEO SPLITTER
 
-        <span>
-        Auto Video Cutting Tool
-        </span>
+<span>
+Auto Video Cutting Tool
+</span>
 
-        <p>
-        Upload Video & Split Automatically
-        </p>
+<p>
+Upload Video & Split Automatically
+</p>
 
-    </div>
-
-
-
-    <div class="box">
-
-
-        <h2>
-        📁 Upload Video
-        </h2>
-
-
-        <input 
-        type="file"
-        id="file"
-        accept="video/*">
+</div>
 
 
 
-    </div>
+<div class="card">
+
+<h2>📁 Upload Video</h2>
+
+<input 
+type="file"
+id="video"
+accept="video/*">
+
+</div>
 
 
 
 
-
-    <div class="box">
-
-
-        <h2>
-        ⏱️ Choose Split Time
-        </h2>
+<div class="card">
 
 
-
-        <select id="splitTime">
-
-
-            <option value="300">
-            5 Minutes
-            </option>
+<h2>⏱️ Choose Split Time</h2>
 
 
-            <option value="600" selected>
-            10 Minutes
-            </option>
+<select id="time">
 
 
-
-            <option value="1200">
-            20 Minutes
-            </option>
-
+<option value="300">
+5 Minutes
+</option>
 
 
-            <option value="1800">
-            30 Minutes
-            </option>
+<option value="600" selected>
+10 Minutes
+</option>
 
 
-        </select>
+<option value="1200">
+20 Minutes
+</option>
 
 
-    </div>
+<option value="1800">
+30 Minutes
+</option>
 
 
-
-
-
-    <button id="startBtn">
-
-        🚀 Generate Video
-
-    </button>
-
-
-
-
-
-    <div class="box">
-
-
-        <h2>
-        📥 Download Result
-        </h2>
-
-
-        <div id="result">
-
-            Waiting...
-
-        </div>
-
-
-    </div>
-
+</select>
 
 
 </div>
 
 
 
+
+<button id="start">
+
+🚀 Generate Video
+
+</button>
+
+
+
+<div class="card">
+
+
+<h2>📥 Download Result</h2>
+
+
+<div id="result">
+
+Waiting...
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
 <script src="script.js"></script>
 
 
 </body>
-
-      </html>
+</html>
